@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import TitanicScene from './components/TitanicScene';
 
 type Quiz = {
@@ -8,33 +8,60 @@ type Quiz = {
   explanation: string;
 };
 
-const navItems = ['TITANIC', 'LE VOYAGE', 'À BORD', 'LE NAUFRAGE', 'QUIZ'];
+const navItems = ['TITANIC', 'LE VOYAGE', 'À BORD', 'LE NAUFRAGE', 'QUIZ'] as const;
 
 const facts = [
-  { value: '269 MÈTRES', label: 'sa longueur', detail: 'Presque trois terrains de football mis bout à bout.' },
-  { value: '4 CHEMINÉES', label: 'au-dessus du pont', detail: 'Trois d’entre elles servaient vraiment à évacuer la fumée.' },
-  { value: '≈ 2 200', label: 'personnes à bord', detail: 'Passagers et membres de l’équipage ensemble.' },
-  { value: '1912', label: 'première traversée', detail: 'L’année du départ historique vers New York.' },
-];
+  {
+    value: '269 MÈTRES',
+    label: 'sa longueur',
+    detail: 'Presque trois terrains de football mis bout à bout.',
+  },
+  {
+    value: '4 CHEMINÉES',
+    label: 'au-dessus du pont',
+    detail: 'Trois d’entre elles servaient réellement à évacuer la fumée.',
+  },
+  {
+    value: '≈ 2 200',
+    label: 'personnes à bord',
+    detail: 'Passagers et membres de l’équipage ensemble.',
+  },
+  {
+    value: '1912',
+    label: 'première traversée',
+    detail: 'L’année du départ historique vers New York.',
+  },
+] as const;
 
 const quizData: Quiz[] = [
   {
     question: 'En quelle année le Titanic a-t-il fait sa traversée inaugurale ?',
     options: ['1905', '1912', '1898', '1920'],
     answer: '1912',
-    explanation: 'Le Titanic a commencé son voyage inaugural en 1912, en avril.'
+    explanation: 'Le Titanic a commencé son voyage inaugural en 1912, en avril.',
   },
   {
     question: 'Que le Titanic a-t-il heurté ?',
     options: ['Un bateau', 'Un iceberg', 'Un récif', 'Une tempête'],
     answer: 'Un iceberg',
-    explanation: 'Le navire a rencontré un iceberg au large de l’Atlantique Nord.'
+    explanation: 'Le navire a rencontré un iceberg au large de l’Atlantique Nord.',
   },
   {
     question: 'Pourquoi les canots de sauvetage étaient-ils importants ?',
     options: ['Pour jouer', 'Pour sauver des personnes', 'Pour aller plus vite', 'Pour rendre le bateau plus lourd'],
     answer: 'Pour sauver des personnes',
-    explanation: 'Ils étaient essentiels pour évacuer les passagers dans une situation de détresse.'
+    explanation: 'Ils étaient essentiels pour évacuer les passagers dans une situation de détresse.',
+  },
+  {
+    question: 'Qu’est-ce que l’histoire du Titanic nous apprend ?',
+    options: [
+      'Les bateaux ne doivent plus être surveillés',
+      'La sécurité et les avertissements sont essentiels',
+      'Les icebergs n’existent pas',
+      'Les paquebots ne peuvent jamais chavirer',
+    ],
+    answer: 'La sécurité et les avertissements sont essentiels',
+    explanation: 'Le naufrage a marqué une réforme de la sécurité maritime dans le monde.',
   },
 ];
 
@@ -57,6 +84,7 @@ export default function App() {
       setSelectedAnswer(null);
       return;
     }
+
     setCurrentQuestion(0);
     setSelectedAnswer(null);
   };
@@ -74,7 +102,12 @@ export default function App() {
             </a>
           ))}
         </nav>
-        <button className="sound-toggle" onClick={() => setSoundOn((prev) => !prev)} aria-label="Activer ou désactiver le son">
+        <button
+          className="sound-toggle"
+          onClick={() => setSoundOn((prev) => !prev)}
+          aria-label="Activer ou désactiver le son"
+          type="button"
+        >
           {soundOn ? 'SON ON' : 'SON OFF'}
         </button>
       </header>
@@ -87,6 +120,7 @@ export default function App() {
             <p className="lead">Un voyage extraordinaire. Une histoire vraie. Un souvenir qui ne s'efface pas.</p>
             <div className="scroll-indicator">DÉFILE POUR EMBARQUER ↓</div>
           </div>
+
           <div className="hero-scene">
             <div className="scene-frame">
               <TitanicScene />
@@ -94,7 +128,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="story section">
+        <section className="story section" id="voyage">
           <div className="section-heading">
             <p className="eyebrow">CHAPITRE 1</p>
             <h2>UN HÔTEL AU MILIEU DE L’OCÉAN</h2>
@@ -116,7 +150,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section deck-layout">
+        <section className="section deck-layout" id="bord">
           <div className="section-heading">
             <p className="eyebrow">CHAPITRE 2</p>
             <h2>À BORD DU TITANIC</h2>
@@ -150,7 +184,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section captain-block">
+        <section className="section captain-block" id="captain">
           <div className="section-heading">
             <p className="eyebrow">LE CAPITAINE</p>
             <h2>CAPITAINE EDWARD SMITH</h2>
@@ -164,7 +198,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section timeline-block">
+        <section className="section timeline-block" id="naufrage">
           <div className="section-heading">
             <p className="eyebrow">DU DÉPART À L’ICEBERG</p>
             <h2>10 AVRIL 1912 · LE VOYAGE COMMENCE</h2>
@@ -212,7 +246,31 @@ export default function App() {
           </div>
         </section>
 
-        <section className="quiz section">
+        <section className="section museum-section">
+          <div className="section-heading">
+            <p className="eyebrow">MUSÉE INTERACTIF</p>
+            <h2>EXPLORER L’HISTOIRE</h2>
+          </div>
+          <div className="museum-grid">
+            <article className="museum-card highlight">
+              <span>01</span>
+              <h3>Explorer le Titanic</h3>
+              <p>Retourne voir le paquebot, observe ses lignes, ses cheminées et ses ponts.</p>
+            </article>
+            <article className="museum-card">
+              <span>02</span>
+              <h3>Découvrir les personnes</h3>
+              <p>Des récits respectueux et adaptés aux enfants, entre faits vérifiés et scènes reconstituées.</p>
+            </article>
+            <article className="museum-card">
+              <span>03</span>
+              <h3>Tester ses connaissances</h3>
+              <p>Un quiz rapide pour revoir la leçon, comprendre et mémoriser les points clés.</p>
+            </article>
+          </div>
+        </section>
+
+        <section className="quiz section" id="quiz">
           <div className="section-heading">
             <p className="eyebrow">TEST</p>
             <h2>TESTE TES CONNAISSANCES</h2>
@@ -249,6 +307,24 @@ export default function App() {
                 </button>
               </div>
             )}
+          </div>
+        </section>
+
+        <section className="ending section">
+          <div className="ending-box">
+            <p className="eyebrow">FIN DU VOYAGE</p>
+            <h2>TU AS EXPLORÉ L’HISTOIRE DU TITANIC.</h2>
+            <p>
+              Tu connais maintenant l’histoire de ce grand paquebot et les leçons que le monde a tirées de son naufrage.
+            </p>
+            <div className="ending-actions">
+              <button type="button" className="cta" onClick={() => setCurrentQuestion(0)}>
+                REVOIR LE VOYAGE
+              </button>
+              <button type="button" className="ghost-button" onClick={() => setSelectedFact(0)}>
+                REVISITER LE BATEAU
+              </button>
+            </div>
           </div>
         </section>
       </main>
