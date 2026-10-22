@@ -113,7 +113,7 @@ export default function App() {
       </header>
 
       <main>
-        <section className="hero section">
+        <section className="hero section hero-panel">
           <div className="hero-copy">
             <p className="eyebrow">RMS TITANIC · PREMIÈRE TRAVERSÉE</p>
             <h1>LE GÉANT DES MERS</h1>
@@ -128,7 +128,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="story section" id="voyage">
+        <section className="story section cinematic-strip" id="voyage">
           <div className="section-heading">
             <p className="eyebrow">CHAPITRE 1</p>
             <h2>UN HÔTEL AU MILIEU DE L’OCÉAN</h2>
@@ -150,7 +150,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section deck-layout" id="bord">
+        <section className="section deck-layout cinematic-panel" id="bord">
           <div className="section-heading">
             <p className="eyebrow">CHAPITRE 2</p>
             <h2>À BORD DU TITANIC</h2>
@@ -184,7 +184,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section captain-block" id="captain">
+        <section className="section captain-block cinematic-panel" id="captain">
           <div className="section-heading">
             <p className="eyebrow">LE CAPITAINE</p>
             <h2>CAPITAINE EDWARD SMITH</h2>
@@ -198,7 +198,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section timeline-block" id="naufrage">
+        <section className="section timeline-block cinematic-panel" id="naufrage">
           <div className="section-heading">
             <p className="eyebrow">DU DÉPART À L’ICEBERG</p>
             <h2>10 AVRIL 1912 · LE VOYAGE COMMENCE</h2>
@@ -212,7 +212,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section collision-block">
+        <section className="section collision-block cinematic-panel">
           <div className="section-heading">
             <p className="eyebrow">23 H 40 · 14 AVRIL 1912</p>
             <h2>L’ICEBERG</h2>
@@ -223,7 +223,7 @@ export default function App() {
           </p>
         </section>
 
-        <section className="section sinking-block">
+        <section className="section sinking-block cinematic-panel">
           <div className="section-heading">
             <p className="eyebrow">15 AVRIL 1912 · 2 H 20</p>
             <h2>LE TITANIC DISPARAÎT SOUS L’OCÉAN</h2>
@@ -233,7 +233,7 @@ export default function App() {
           </p>
         </section>
 
-        <section className="section final-section">
+        <section className="section final-section cinematic-strip">
           <div className="section-heading">
             <p className="eyebrow">LEÇON ET MÉMOIRE</p>
             <h2>UNE HISTOIRE QUI A CHANGÉ LA SÉCURITÉ EN MER</h2>
@@ -246,7 +246,31 @@ export default function App() {
           </div>
         </section>
 
-        <section className="quiz section" id="quiz">
+        <section className="section museum-section cinematic-panel">
+          <div className="section-heading">
+            <p className="eyebrow">MUSÉE INTERACTIF</p>
+            <h2>EXPLORER L’HISTOIRE</h2>
+          </div>
+          <div className="museum-grid">
+            <article className="museum-card highlight">
+              <span>01</span>
+              <h3>Explorer le Titanic</h3>
+              <p>Retourne voir le paquebot, observe ses lignes, ses cheminées et ses ponts.</p>
+            </article>
+            <article className="museum-card">
+              <span>02</span>
+              <h3>Découvrir les personnes</h3>
+              <p>Des récits respectueux et adaptés aux enfants, entre faits vérifiés et scènes reconstituées.</p>
+            </article>
+            <article className="museum-card">
+              <span>03</span>
+              <h3>Tester ses connaissances</h3>
+              <p>Un quiz rapide pour revoir la leçon, comprendre et mémoriser les points clés.</p>
+            </article>
+          </div>
+        </section>
+
+        <section className="quiz section cinematic-panel" id="quiz">
           <div className="section-heading">
             <p className="eyebrow">TEST</p>
             <h2>TESTE TES CONNAISSANCES</h2>
@@ -283,6 +307,24 @@ export default function App() {
                 </button>
               </div>
             )}
+          </div>
+        </section>
+
+        <section className="ending section">
+          <div className="ending-box">
+            <p className="eyebrow">FIN DU VOYAGE</p>
+            <h2>TU AS EXPLORÉ L’HISTOIRE DU TITANIC.</h2>
+            <p>
+              Tu connais maintenant l’histoire de ce grand paquebot et les leçons que le monde a tirées de son naufrage.
+            </p>
+            <div className="ending-actions">
+              <button type="button" className="cta" onClick={() => setCurrentQuestion(0)}>
+                REVOIR LE VOYAGE
+              </button>
+              <button type="button" className="ghost-button" onClick={() => setSelectedFact(0)}>
+                REVISITER LE BATEAU
+              </button>
+            </div>
           </div>
         </section>
       </main>
