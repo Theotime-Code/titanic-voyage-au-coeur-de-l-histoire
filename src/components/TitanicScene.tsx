@@ -8,39 +8,60 @@ type Quiz = {
   explanation: string;
 };
 
-const navItems = ['TITANIC', 'LE VOYAGE', 'À BORD', 'LE NAUFRAGE', 'QUIZ'];
+const navItems = ['TITANIC', 'LE VOYAGE', 'À BORD', 'LE NAUFRAGE', 'QUIZ'] as const;
 
 const facts = [
-  { value: '269 MÈTRES', label: 'sa longueur', detail: 'Presque trois terrains de football mis bout à bout.' },
-  { value: '4 CHEMINÉES', label: 'au-dessus du pont', detail: 'Trois d’entre elles servaient réellement à évacuer la fumée.' },
-  { value: '≈ 2 200', label: 'personnes à bord', detail: 'Passagers et membres de l’équipage ensemble.' },
-  { value: '1912', label: 'première traversée', detail: 'L’année du départ historique vers New York.' },
-];
+  {
+    value: '269 MÈTRES',
+    label: 'sa longueur',
+    detail: 'Presque trois terrains de football mis bout à bout.',
+  },
+  {
+    value: '4 CHEMINÉES',
+    label: 'au-dessus du pont',
+    detail: 'Trois d’entre elles servaient réellement à évacuer la fumée.',
+  },
+  {
+    value: '≈ 2 200',
+    label: 'personnes à bord',
+    detail: 'Passagers et membres de l’équipage ensemble.',
+  },
+  {
+    value: '1912',
+    label: 'première traversée',
+    detail: 'L’année du départ historique vers New York.',
+  },
+] as const;
 
 const quizData: Quiz[] = [
   {
     question: 'En quelle année le Titanic a-t-il fait sa traversée inaugurale ?',
     options: ['1905', '1912', '1898', '1920'],
     answer: '1912',
-    explanation: 'Le Titanic a commencé son voyage inaugural en 1912, en avril.'
+    explanation: 'Le Titanic a commencé son voyage inaugural en 1912, en avril.',
   },
   {
     question: 'Que le Titanic a-t-il heurté ?',
     options: ['Un bateau', 'Un iceberg', 'Un récif', 'Une tempête'],
     answer: 'Un iceberg',
-    explanation: 'Le navire a rencontré un iceberg au large de l’Atlantique Nord.'
+    explanation: 'Le navire a rencontré un iceberg au large de l’Atlantique Nord.',
   },
   {
     question: 'Pourquoi les canots de sauvetage étaient-ils importants ?',
     options: ['Pour jouer', 'Pour sauver des personnes', 'Pour aller plus vite', 'Pour rendre le bateau plus lourd'],
     answer: 'Pour sauver des personnes',
-    explanation: 'Ils étaient essentiels pour évacuer les passagers dans une situation de détresse.'
+    explanation: 'Ils étaient essentiels pour évacuer les passagers dans une situation de détresse.',
   },
   {
     question: 'Qu’est-ce que l’histoire du Titanic nous apprend ?',
-    options: ['Les bateaux ne doivent plus être surveillés', 'La sécurité et les avertissements sont essentiels', 'Les iceberg n’existent pas', 'Les paquebots ne peuvent jamais chavirer'],
+    options: [
+      'Les bateaux ne doivent plus être surveillés',
+      'La sécurité et les avertissements sont essentiels',
+      'Les icebergs n’existent pas',
+      'Les paquebots ne peuvent jamais chavirer',
+    ],
     answer: 'La sécurité et les avertissements sont essentiels',
-    explanation: 'Le naufrage a marqué une réforme de la sécurité maritime dans le monde.'
+    explanation: 'Le naufrage a marqué une réforme de la sécurité maritime dans le monde.',
   },
 ];
 
@@ -107,7 +128,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="story section">
+        <section className="story section" id="voyage">
           <div className="section-heading">
             <p className="eyebrow">CHAPITRE 1</p>
             <h2>UN HÔTEL AU MILIEU DE L’OCÉAN</h2>
@@ -129,7 +150,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section deck-layout">
+        <section className="section deck-layout" id="bord">
           <div className="section-heading">
             <p className="eyebrow">CHAPITRE 2</p>
             <h2>À BORD DU TITANIC</h2>
@@ -163,7 +184,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section captain-block">
+        <section className="section captain-block" id="captain">
           <div className="section-heading">
             <p className="eyebrow">LE CAPITAINE</p>
             <h2>CAPITAINE EDWARD SMITH</h2>
@@ -177,7 +198,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="section timeline-block">
+        <section className="section timeline-block" id="naufrage">
           <div className="section-heading">
             <p className="eyebrow">DU DÉPART À L’ICEBERG</p>
             <h2>10 AVRIL 1912 · LE VOYAGE COMMENCE</h2>
@@ -225,7 +246,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="quiz section">
+        <section className="quiz section" id="quiz">
           <div className="section-heading">
             <p className="eyebrow">TEST</p>
             <h2>TESTE TES CONNAISSANCES</h2>
