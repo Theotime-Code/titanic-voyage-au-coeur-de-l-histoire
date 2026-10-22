@@ -1,126 +1,271 @@
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Float, ContactShadows } from '@react-three/drei';
-import { useMemo, useRef } from 'react';
-import type { Group } from 'three';
+import { useState } from 'react';
+import TitanicScene from './components/TitanicScene';
 
-function TitanicModel() {
-  const group = useRef<Group>(null);
+type Quiz = {
+  question: string;
+  options: string[];
+  answer: string;
+  explanation: string;
+};
 
-  const portholes = useMemo(
-    () =>
-      Array.from({ length: 14 }, (_, index) => ({
-        x: -4.7 + index * 0.7,
-        y: 0.95,
-        z: 0.8,
-      })),
-    [],
-  );
+const navItems = ['TITANIC', 'LE VOYAGE', 'À BORD', 'LE NAUFRAGE', 'QUIZ'];
+
+const facts = [
+  { value: '269 MÈTRES', label: 'sa longueur', detail: 'Presque trois terrains de football mis bout à bout.' },
+  { value: '4 CHEMINÉES', label: 'au-dessus du pont', detail: 'Trois d’entre elles servaient réellement à évacuer la fumée.' },
+  { value: '≈ 2 200', label: 'personnes à bord', detail: 'Passagers et membres de l’équipage ensemble.' },
+  { value: '1912', label: 'première traversée', detail: 'L’année du départ historique vers New York.' },
+];
+
+const quizData: Quiz[] = [
+  {
+    question: 'En quelle année le Titanic a-t-il fait sa traversée inaugurale ?',
+    options: ['1905', '1912', '1898', '1920'],
+    answer: '1912',
+    explanation: 'Le Titanic a commencé son voyage inaugural en 1912, en avril.'
+  },
+  {
+    question: 'Que le Titanic a-t-il heurté ?',
+    options: ['Un bateau', 'Un iceberg', 'Un récif', 'Une tempête'],
+    answer: 'Un iceberg',
+    explanation: 'Le navire a rencontré un iceberg au large de l’Atlantique Nord.'
+  },
+  {
+    question: 'Pourquoi les canots de sauvetage étaient-ils importants ?',
+    options: ['Pour jouer', 'Pour sauver des personnes', 'Pour aller plus vite', 'Pour rendre le bateau plus lourd'],
+    answer: 'Pour sauver des personnes',
+    explanation: 'Ils étaient essentiels pour évacuer les passagers dans une situation de détresse.'
+  },
+  {
+    question: 'Qu’est-ce que l’histoire du Titanic nous apprend ?',
+    options: ['Les bateaux ne doivent plus être surveillés', 'La sécurité et les avertissements sont essentiels', 'Les iceberg n’existent pas', 'Les paquebots ne peuvent jamais chavirer'],
+    answer: 'La sécurité et les avertissements sont essentiels',
+    explanation: 'Le naufrage a marqué une réforme de la sécurité maritime dans le monde.'
+  },
+];
+
+export default function App() {
+  const [soundOn, setSoundOn] = useState(false);
+  const [selectedFact, setSelectedFact] = useState<number | null>(0);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+
+  const currentQuiz = quizData[currentQuestion];
+  const progress = ((currentQuestion + 1) / quizData.length) * 100;
+
+  const handleAnswer = (option: string) => {
+    setSelectedAnswer(option);
+  };
+
+  const nextQuestion = () => {
+    if (currentQuestion < quizData.length - 1) {
+      setCurrentQuestion((prev) => prev + 1);
+      setSelectedAnswer(null);
+      return;
+    }
+
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+  };
+
+  const isCorrect = selectedAnswer === currentQuiz.answer;
 
   return (
-    <group ref={group} position={[0, -0.5, 0]} rotation={[0.15, -0.7, 0]}>
-      <Float speed={2.2} rotationIntensity={0.2} floatIntensity={0.3}>
-        <mesh position={[0, 0, 0]} castShadow receiveShadow>
-          <boxGeometry args={[8.5, 1.2, 2.5]} />
-          <meshStandardMaterial color="#f1e4cf" roughness={0.8} metalness={0.2} />
-        </mesh>
+    <div className="app-shell">
+      <header className="topbar">
+        <div className="brand">TITANIC</div>
+        <nav className="nav" aria-label="Navigation principale">
+          {navItems.map((item) => (
+            <a href="#" key={item} className="nav-link">
+              {item}
+            </a>
+          ))}
+        </nav>
+        <button
+          className="sound-toggle"
+          onClick={() => setSoundOn((prev) => !prev)}
+          aria-label="Activer ou désactiver le son"
+          type="button"
+        >
+          {soundOn ? 'SON ON' : 'SON OFF'}
+        </button>
+      </header>
 
-        <mesh position={[0, 0.75, 0]} castShadow receiveShadow>
-          <boxGeometry args={[8.9, 0.8, 2.8]} />
-          <meshStandardMaterial color="#e7d7b5" roughness={0.8} metalness={0.1} />
-        </mesh>
+      <main>
+        <section className="hero section">
+          <div className="hero-copy">
+            <p className="eyebrow">RMS TITANIC · PREMIÈRE TRAVERSÉE</p>
+            <h1>LE GÉANT DES MERS</h1>
+            <p className="lead">Un voyage extraordinaire. Une histoire vraie. Un souvenir qui ne s'efface pas.</p>
+            <div className="scroll-indicator">DÉFILE POUR EMBARQUER ↓</div>
+          </div>
 
-        <mesh position={[0, -0.5, 0]} castShadow receiveShadow>
-          <boxGeometry args={[9.4, 0.6, 3.2]} />
-          <meshStandardMaterial color="#081d2d" roughness={0.8} metalness={0.4} />
-        </mesh>
+          <div className="hero-scene">
+            <div className="scene-frame">
+              <TitanicScene />
+            </div>
+          </div>
+        </section>
 
-        <mesh position={[0, 0.1, 0]} castShadow receiveShadow>
-          <boxGeometry args={[8.4, 0.2, 2.1]} />
-          <meshStandardMaterial color="#a86048" roughness={0.7} metalness={0.2} />
-        </mesh>
+        <section className="story section">
+          <div className="section-heading">
+            <p className="eyebrow">CHAPITRE 1</p>
+            <h2>UN HÔTEL AU MILIEU DE L’OCÉAN</h2>
+          </div>
 
-        <mesh position={[-2.3, 1.5, 0]} castShadow>
-          <cylinderGeometry args={[0.42, 0.42, 1.5, 22]} />
-          <meshStandardMaterial color="#080808" metalness={0.7} roughness={0.5} />
-        </mesh>
-        <mesh position={[0.1, 1.5, 0]} castShadow>
-          <cylinderGeometry args={[0.42, 0.42, 1.5, 22]} />
-          <meshStandardMaterial color="#080808" metalness={0.7} roughness={0.5} />
-        </mesh>
-        <mesh position={[2.35, 1.5, 0]} castShadow>
-          <cylinderGeometry args={[0.42, 0.42, 1.5, 22]} />
-          <meshStandardMaterial color="#080808" metalness={0.7} roughness={0.5} />
-        </mesh>
-        <mesh position={[4.3, 1.5, 0]} castShadow>
-          <cylinderGeometry args={[0.42, 0.42, 1.5, 22]} />
-          <meshStandardMaterial color="#080808" metalness={0.7} roughness={0.5} />
-        </mesh>
+          <div className="facts-grid">
+            {facts.map((fact, index) => (
+              <button
+                key={fact.value}
+                className={`fact-card ${selectedFact === index ? 'active' : ''}`}
+                onClick={() => setSelectedFact(index)}
+                type="button"
+              >
+                <span className="fact-value">{fact.value}</span>
+                <span className="fact-label">{fact.label}</span>
+                {selectedFact === index && <small>{fact.detail}</small>}
+              </button>
+            ))}
+          </div>
+        </section>
 
-        <mesh position={[0, 2.4, 0]} castShadow receiveShadow>
-          <boxGeometry args={[8.2, 0.5, 2.4]} />
-          <meshStandardMaterial color="#f6ebdc" roughness={0.8} metalness={0.15} />
-        </mesh>
+        <section className="section deck-layout">
+          <div className="section-heading">
+            <p className="eyebrow">CHAPITRE 2</p>
+            <h2>À BORD DU TITANIC</h2>
+          </div>
 
-        <mesh position={[0, 2.8, 0]} castShadow>
-          <cylinderGeometry args={[0.18, 0.18, 2.6, 18]} />
-          <meshStandardMaterial color="#b38a5a" roughness={0.8} metalness={0.4} />
-        </mesh>
+          <div className="locations">
+            <article className="location-card">
+              <h3>Grandes escaliers</h3>
+              <p>Un hall majestueux où les voyageurs de première classe descendaient avec élégance.</p>
+            </article>
+            <article className="location-card">
+              <h3>Salle à manger</h3>
+              <p>De grands repas et des contrastes forts entre les riches cabines et les espaces plus simples.</p>
+            </article>
+            <article className="location-card">
+              <h3>Cabines</h3>
+              <p>Des chambres très différentes selon le confort et le rang social des passagers.</p>
+            </article>
+            <article className="location-card">
+              <h3>Gymnase</h3>
+              <p>Un espace lumineux pour se détendre, très avancé pour l’époque.</p>
+            </article>
+            <article className="location-card">
+              <h3>Machines</h3>
+              <p>Le cœur du navire : une puissance à vapeur qui fait avancer le paquebot.</p>
+            </article>
+            <article className="location-card">
+              <h3>Pont ouvert</h3>
+              <p>Le grand ciel, les canots, les garde-corps et l’horizon de l’Atlantique.</p>
+            </article>
+          </div>
+        </section>
 
-        <mesh position={[0, 3.7, 0]} castShadow>
-          <boxGeometry args={[1.1, 0.15, 1.1]} />
-          <meshStandardMaterial color="#d5b98d" roughness={0.8} metalness={0.2} />
-        </mesh>
+        <section className="section captain-block">
+          <div className="section-heading">
+            <p className="eyebrow">LE CAPITAINE</p>
+            <h2>CAPITAINE EDWARD SMITH</h2>
+          </div>
 
-        {portholes.map((p, index) => (
-          <mesh key={index} position={[p.x, p.y, p.z]}>
-            <sphereGeometry args={[0.08, 20, 20]} />
-            <meshStandardMaterial color="#0d1f2d" roughness={0.7} metalness={0.3} />
-          </mesh>
-        ))}
+          <div className="dialogue-box">
+            <span className="dialogue-role">CAPITAINE SMITH</span>
+            <p>
+              « Bienvenue à bord ! Le Titanic s’apprête à traverser l’Atlantique. Notre destination est New York. »
+            </p>
+          </div>
+        </section>
 
-        {portholes.map((p, index) => (
-          <mesh key={`mirror-${index}`} position={[p.x, p.y, -p.z]}>
-            <sphereGeometry args={[0.08, 20, 20]} />
-            <meshStandardMaterial color="#0d1f2d" roughness={0.7} metalness={0.3} />
-          </mesh>
-        ))}
+        <section className="section timeline-block">
+          <div className="section-heading">
+            <p className="eyebrow">DU DÉPART À L’ICEBERG</p>
+            <h2>10 AVRIL 1912 · LE VOYAGE COMMENCE</h2>
+          </div>
 
-        <mesh position={[-4.5, 0.15, 0]} castShadow>
-          <boxGeometry args={[0.35, 0.75, 0.7]} />
-          <meshStandardMaterial color="#d7b98d" roughness={0.9} metalness={0.1} />
-        </mesh>
-        <mesh position={[4.5, 0.15, 0]} castShadow>
-          <boxGeometry args={[0.35, 0.75, 0.7]} />
-          <meshStandardMaterial color="#d7b98d" roughness={0.9} metalness={0.1} />
-        </mesh>
+          <div className="timeline">
+            <div><strong>Southampton</strong><span>Départ</span></div>
+            <div><strong>Cherbourg</strong><span>Escale</span></div>
+            <div><strong>Queenstown</strong><span>Arrivée</span></div>
+            <div><strong>Atlantique</strong><span>Mer ouverte</span></div>
+          </div>
+        </section>
 
-        <mesh position={[-4.7, -0.8, 0.7]} rotation={[0, 0, -0.25]} castShadow>
-          <cylinderGeometry args={[0.18, 0.18, 1.5, 18]} />
-          <meshStandardMaterial color="#d7b98d" />
-        </mesh>
-        <mesh position={[4.7, -0.8, 0.7]} rotation={[0, 0, 0.25]} castShadow>
-          <cylinderGeometry args={[0.18, 0.18, 1.5, 18]} />
-          <meshStandardMaterial color="#d7b98d" />
-        </mesh>
-      </Float>
-    </group>
+        <section className="section collision-block">
+          <div className="section-heading">
+            <p className="eyebrow">23 H 40 · 14 AVRIL 1912</p>
+            <h2>L’ICEBERG</h2>
+          </div>
+          <p className="narrative">
+            Le Titanic a heurté un iceberg. La coque a été endommagée et l’eau a commencé à entrer dans le navire.
+            La situation est très grave.
+          </p>
+        </section>
+
+        <section className="section sinking-block">
+          <div className="section-heading">
+            <p className="eyebrow">15 AVRIL 1912 · 2 H 20</p>
+            <h2>LE TITANIC DISPARAÎT SOUS L’OCÉAN</h2>
+          </div>
+          <p className="narrative">
+            Environ 1 500 personnes ont perdu la vie. Environ 700 ont survécu. Nous nous souvenons de toutes les personnes touchées par cette tragédie.
+          </p>
+        </section>
+
+        <section className="section final-section">
+          <div className="section-heading">
+            <p className="eyebrow">LEÇON ET MÉMOIRE</p>
+            <h2>UNE HISTOIRE QUI A CHANGÉ LA SÉCURITÉ EN MER</h2>
+          </div>
+          <div className="memory-grid">
+            <div>Des canots plus nombreux</div>
+            <div>Des avertissements plus sérieux</div>
+            <div>Des procédures d’urgence</div>
+            <div>Des règles internationales</div>
+          </div>
+        </section>
+
+        <section className="quiz section">
+          <div className="section-heading">
+            <p className="eyebrow">TEST</p>
+            <h2>TESTE TES CONNAISSANCES</h2>
+          </div>
+
+          <div className="quiz-card">
+            <div className="quiz-progress">
+              <span>{currentQuestion + 1}/{quizData.length}</span>
+              <div className="progress-bar"><span style={{ width: `${progress}%` }} /></div>
+            </div>
+
+            <h3>{currentQuiz.question}</h3>
+
+            <div className="answer-list">
+              {currentQuiz.options.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => handleAnswer(option)}
+                  className={`answer-button ${selectedAnswer === option ? 'selected' : ''}`}
+                  disabled={selectedAnswer !== null}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+
+            {selectedAnswer !== null && (
+              <div className={`quiz-feedback ${isCorrect ? 'correct' : 'wrong'}`}>
+                <strong>{isCorrect ? 'Bonne réponse !' : 'Pas tout à fait...'}</strong>
+                <p>{currentQuiz.explanation}</p>
+                <button type="button" className="cta" onClick={nextQuestion}>
+                  {currentQuestion < quizData.length - 1 ? 'Question suivante' : 'Recommencer'}
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
 
-export default function TitanicScene() {
-  return (
-    <Canvas shadows camera={{ position: [0, 1.6, 10], fov: 36 }}>
-      <color attach="background" args={['#f2efe8']} />
-      <ambientLight intensity={0.8} color="#f8f2e8" />
-      <directionalLight position={[5, 7, 5]} intensity={2} color="#fff4d6" castShadow />
-      <spotLight position={[-5, 8, 5]} intensity={1.6} angle={0.6} penumbra={0.5} color="#cfe7ff" />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.2, 0]} receiveShadow>
-        <circleGeometry args={[12, 64]} />
-        <meshStandardMaterial color="#bfeaff" />
-      </mesh>
-      < TitanicModel />
-      <ContactShadows position={[0, -2.18, 0]} opacity={0.35} scale={14} blur={2.4} far={4} />
-      <OrbitControls enablePan={false} enableZoom={false} minPolarAngle={Math.PI / 2.8} maxPolarAngle={Math.PI / 1.9} autoRotate autoRotateSpeed={0.7} />
-    </Canvas>
-  );
-}
